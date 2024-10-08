@@ -75,3 +75,21 @@ class Game:
             {'name': 'Strength Elixir', 'type': 'consumable', 'value': 5},
             {'name': 'Herb Bag', 'type': 'consumable', 'value': 10}
         ]
+
+    def generate_enemies(self):
+        enemy_names = ["El Bandido", "El Rival", "El Fantasma", "El Mercenario", "La Bestia"]
+        name = random.choice(enemy_names)
+        health = random.randint(50, 100)
+        strength = random.randint(5, 15)
+        defense = random.randint(0, 5)
+        return Enemy(name, health, strength, defense)
+
+    def generate_dungeons(self):
+        return [
+            {"name": "Mazmorras de la Oscuridad", "enemies": [self.generate_enemies() for _ in range(2)],
+             "boss": Enemy("Ladron Espectral", 80, 12, 5)},
+            {"name": "Cueva de la Bestia", "enemies": [self.generate_enemies() for _ in range(3)],
+             "boss": Enemy("Bestia Monstruosa", 100, 15, 8)},
+            {"name": "Torre del Sabio", "enemies": [self.generate_enemies() for _ in range(2)],
+             "boss": Enemy("El Gran Rival Oscuro", 90, 14, 6)}
+        ]
