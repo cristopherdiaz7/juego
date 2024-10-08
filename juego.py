@@ -93,3 +93,6 @@ class Game:
             {"name": "Torre del Sabio", "enemies": [self.generate_enemies() for _ in range(2)],
              "boss": Enemy("El Gran Rival Oscuro", 90, 14, 6)}
         ]
+git add juego.py
+git rm fisica\ optica.py
+git commit -m "Renombrado fisica optica.py a juego.py"
