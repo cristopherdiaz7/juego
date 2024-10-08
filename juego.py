@@ -13,6 +13,7 @@ class Character:
     def attack(self, enemy):
         damage = max(0, random.randint(0, self.strength) - enemt.defense)
         enemy.healt -= damage
+        enemy.health -= damage
         print(f"{self.name} ataca a {enemy.name} y causa {damage} de daño.")
 
     def is_alive(self):
@@ -70,7 +71,7 @@ class Game:
     def generate_items(self):
         return [
             {'name': 'Ring of Strength', 'type': 'permanent', 'attribute': 'strength', 'value': 5},
-            {'name': 'Cloak of Defense', 'type': 'permanent', 'atributte': 'defense', 'value': 3},
+            {'name': 'Cloak of Defense', 'type': 'permanent', 'attribute': 'defense', 'value': 3},
             {'name': 'Health Potion', 'type': 'consumable', 'value': 20},
             {'name': 'Strength Elixir', 'type': 'consumable', 'value': 5},
             {'name': 'Herb Bag', 'type': 'consumable', 'value': 10}
