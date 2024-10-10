@@ -98,46 +98,53 @@ class Game:
         for dungeon in dungeons:
             print(f"\nEntrando a {dungeon['name']}")
             for enemy in dungeon['enemies']:
-                while any(hero.is_alive() for hero in self.heroes) and enemy.is_alive():
-                    print(f"\n¡Un {enemy.name} aparece!")
-                    for i, hero in enumerate(self.heroes):
-                        if hero.is_alive():
-                            print("Seleccion invalida. Intenta de nuevo.")
-                            continue
-
-                        print(f"{self.heroes[selection].name} ha decidido atacar a {enemy.name}.")
-                        self.heroes[selection].attack(enemy)
-                        if enemy.is_alive():
-                            enemy.attack(self.heroes[selection])
-
-                    if not enemy.is_alive():
-                        print(f"¡{enemy.name} ha sido derrotado!")
-                        item_obtained = random.choice(self.items)
-                        self.heroes[selection].receive_item(item_obtained)
-                        experience_gained = random.randint(20, 50)
-                        self.heroes[selection].experience += experience_gained
-                        print(f"{self.heroes[selection].name} ha ganado {experience_gained} puntos de experiencia.")
-
-                        if self.heroes[selection].experience >= 50:
-                            self.heroes[selection].level_up()
-
-                boss = dungeon['boss']
-                print(f"\n¡Un jefe aparece: {boss.name}!")
-                while any(hero.is_alive() for hero in self.heroes) and boss.is_alive():
+                print(f"\n¡Un {enemy.name} aparece!")
+                while enemy.is_alive() and any(hero.is_alive() for hero in self.heroes):
                     for i, hero in enumerate(self.heroes):
                         if hero.is_alive():
                             print(f"{i + 1}. {hero.name} (salud: {hero.health})")
-                    selection = int(input("Selecciona un heroe para atacar (1-3): ")) - 1
+
+                    selection = int(input("Selecciona un héroe para atacar (1-3): ")) - 1
                     if selection < 0 or selection >= len(self.heroes) or not self.heroes[selection].is_alive():
-                        print("Seleccion invalida. Intenta de nuevo.")
-                        continue
+                        print("Seleccion inválida. Intenta de nuevo.")
+                        continue  # Regresar al inicio del bucle para permitir otra selección
 
-                    print(f"{self.heroes[selection].name} ha decidido atacar a {boss.name}.")
-                    self.heroes[selection].attack(boss)
-                    if not boss.is_alive():
-                        print(f"¡{boss.name} ha sido derrotado!")
+                    print(f"{self.heroes[selection].name} ha decidido atacar a {enemy.name}.")
+                    self.heroes[selection].attack(enemy)
+                    if enemy.is_alive():
+                        enemy.attack(self.heroes[selection])
+                    if not self.heroes[selection].is_alive():
+                        print(f"¡{self.heroes[selection].name} ha sido derrotado por {enemy.name}!")
 
-                print("¡Has completado todas las mazmorras!")
+                if not enemy.is_alive():
+                    print(f"¡{enemy.name} ha sido derrotado!")
+                    item_obtained = random.choice(self.items)
+                    self.heroes[selection].receive_item(item_obtained)
+                    experience_gained = random.randint(20, 50)
+                    self.heroes[selection].experience += experience_gained
+                    print(f"{self.heroes[selection].name} ha ganado {experience_gained} puntos de experiencia.")
+                    if self.heroes[selection].experience >= 50:
+                        self.heroes[selection].level_up()
+
+            boss = dungeon['boss']
+            print(f"\n¡ jefe aparece: {boss.name}!")
+            while boss.is_alive() and any(hero.is_alive() for hero in self.heroes):
+                for i, hero in enumerate(self.heroes):
+                    if hero.is_alive():
+                        print(f"{i + 1}. {hero.name} (salud: {hero.health})")
+
+                selection = int(input("Selecciona un héroe para atacar (1-3): ")) - 1
+                if selection < 0 or selection >= len(self.heroes) or not self.heroes[selection].is_alive():
+                    print("Seleccion inválida. Intenta de nuevo.")
+                    continue
+
+                print(f"{self.heroes[selection].name} ha decidido atacar a {boss.name}.")
+                self.heroes[selection].attack(boss)
+
+            if not boss.is_alive():
+                print(f"¡{boss.name} ha sido derrotado!")
+
+        print("¡Has completado todas las mazmorras!")
 
 if __name__ == "__main__":
     game = Game()
