@@ -3,7 +3,7 @@ class Character:
     def __init__(self, name, class_type, health, strength, defense, level):
         self.name = name
         self.class_type = class_type
-        self.health = healt
+        self.health = health
         self.strength = strength
         self.defense = defense
         self.level = level
@@ -11,8 +11,7 @@ class Character:
         self.items = []
 
     def attack(self, enemy):
-        damage = max(0, random.randint(0, self.strength) - enemt.defense)
-        enemy.healt -= damage
+        damage = max(0, random.randint(0, self.strength) - enemy.defense)
         enemy.health -= damage
         print(f"{self.name} ataca a {enemy.name} y causa {damage} de daño.")
 
@@ -94,6 +93,52 @@ class Game:
             {"name": "Torre del Sabio", "enemies": [self.generate_enemies() for _ in range(2)],
              "boss": Enemy("El Gran Rival Oscuro", 90, 14, 6)}
         ]
-git add juego.py
-git rm fisica\ optica.py
-git commit -m "Renombrado fisica optica.py a juego.py"
+
+    def combat(self, dungeons):
+        for dungeon in dungeons:
+            print(f"\nEntrando a {dungeon['name']}")
+            for enemy in dungeon['enemies']:
+                while any(hero.is_alive() for hero in self.heroes) and enemy.is_alive():
+                    print(f"\n¡Un {enemy.name} aparece!")
+                    for i, hero in enumerate(self.heroes):
+                        if hero.is_alive():
+                            print("Seleccion invalida. Intenta de nuevo.")
+                            continue
+
+                        print(f"{self.heroes[selection].name} ha decidido atacar a {enemy.name}.")
+                        self.heroes[selection].attack(enemy)
+                        if enemy.is_alive():
+                            enemy.attack(self.heroes[selection])
+
+                    if not enemy.is_alive():
+                        print(f"¡{enemy.name} ha sido derrotado!")
+                        item_obtained = random.choice(self.items)
+                        self.heroes[selection].receive_item(item_obtained)
+                        experience_gained = random.randint(20, 50)
+                        self.heroes[selection].experience += experience_gained
+                        print(f"{self.heroes[selection].name} ha ganado {experience_gained} puntos de experiencia.")
+
+                        if self.heroes[selection].experience >= 50:
+                            self.heroes[selection].level_up()
+
+                boss = dungeon['boss']
+                print(f"\n¡Un jefe aparece: {boss.name}!")
+                while any(hero.is_alive() for hero in self.heroes) and boss.is_alive():
+                    for i, hero in enumerate(self.heroes):
+                        if hero.is_alive():
+                            print(f"{i + 1}. {hero.name} (salud: {hero.health})")
+                    selection = int(input("Selecciona un heroe para atacar (1-3): ")) - 1
+                    if selection < 0 or selection >= len(self.heroes) or not self.heroes[selection].is_alive():
+                        print("Seleccion invalida. Intenta de nuevo.")
+                        continue
+
+                    print(f"{self.heroes[selection].name} ha decidido atacar a {boss.name}.")
+                    self.heroes[selection].attack(boss)
+                    if not boss.is_alive():
+                        print(f"¡{boss.name} ha sido derrotado!")
+
+                print("¡Has completado todas las mazmorras!")
+
+if __name__ == "__main__":
+    game = Game()
+    game.combat(game.dungeons)
